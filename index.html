@@ -102,10 +102,7 @@
   .empty-order { text-align: center; color: var(--muted); font-size: 0.85rem; padding: 1.2rem; border: 1px dashed rgba(255,154,60,0.2); }
   .footer { text-align: center; padding: 2rem; color: var(--muted); font-size: 0.72rem; letter-spacing: 2px; border-top: 1px solid rgba(255,154,60,0.1); }
   .footer a { color: var(--orange); text-decoration: none; }
-  .textarea.field-input {
-    width: 100%;
-    border-radius: 0; /* ليناسب تصميمك */
-}
+  
 </style>
 
 
@@ -184,10 +181,7 @@
       <label>العنوان</label>
       <input class="field-input" type="text" id="custAddress" placeholder="المنطقة، الشارع، وصف الدار..." oninput="updateOrderText()">
     </div>
-    <div class="field-group" style="margin-top: 1rem;">
-  <label>ملاحظات إضافية</label>
-   <textarea class="field-input" id="custNotes" placeholder="مثلاً: بدون مخلل، كثر صوص..." oninput="updateOrderText()" style="min-height: 80px; resize: vertical;"></textarea>
-   </div>
+    
     <div id="orderItemsList"><div class="empty-order">لم تضف أي عناصر بعد — اختر من القائمة أعلاه</div></div>
     <div class="order-text-box" id="orderTextBox" dir="rtl">سيظهر طلبك هنا...</div>
     <button class="copy-btn-main" onclick="copyOrder()">📋 انسخ الطلب وأرسله للمطعم</button>
@@ -529,7 +523,7 @@ function updateOrderText() {
   const deliveryLine = isDelivery
     ? `📍 التوصيل: نعم\n🏠 العنوان: ${address || '...'}`
     : `🏃 الاستلام: من المحل مباشرة`;
-const notesLine = notes ? `📝 ملاحظات: ${notes}\n` : '';
+
   // النص الكامل الجاهز للنسخ والإرسال
   box.textContent =
 `━━━━━━━━━━━━━━━━━━━━
