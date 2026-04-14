@@ -102,7 +102,12 @@
   .empty-order { text-align: center; color: var(--muted); font-size: 0.85rem; padding: 1.2rem; border: 1px dashed rgba(255,154,60,0.2); }
   .footer { text-align: center; padding: 2rem; color: var(--muted); font-size: 0.72rem; letter-spacing: 2px; border-top: 1px solid rgba(255,154,60,0.1); }
   .footer a { color: var(--orange); text-decoration: none; }
+  .textarea.field-input {
+    width: 100%;
+    border-radius: 0; /* ليناسب تصميمك */
+}
 </style>
+
 
 <div style="background:#0A0A0A;min-height:100vh;">
   <div class="hero">
@@ -179,6 +184,10 @@
       <label>العنوان</label>
       <input class="field-input" type="text" id="custAddress" placeholder="المنطقة، الشارع، وصف الدار..." oninput="updateOrderText()">
     </div>
+    <div class="field-group" style="margin-top: 1rem;">
+  <label>ملاحظات إضافية</label>
+   <textarea class="field-input" id="custNotes" placeholder="مثلاً: بدون مخلل، كثر صوص..." oninput="updateOrderText()" style="min-height: 80px; resize: vertical;"></textarea>
+   </div>
     <div id="orderItemsList"><div class="empty-order">لم تضف أي عناصر بعد — اختر من القائمة أعلاه</div></div>
     <div class="order-text-box" id="orderTextBox" dir="rtl">سيظهر طلبك هنا...</div>
     <button class="copy-btn-main" onclick="copyOrder()">📋 انسخ الطلب وأرسله للمطعم</button>
@@ -206,23 +215,24 @@ const menuData = {
 
   // وجبات فردية — سعر واحد ثابت لكل وجبة
   meals: [
-    { id:'ml1', name:'بروست',     desc:'قطع بروست مقرمشة طازجة',  price:21, img:'WhatsApp Image broasted.jpeg' },
-    { id:'ml2', name:'مسحب',      desc:'مسحب دجاج ولذيذ',     price:21, img:'' },
-    { id:'ml3', name:'برجر جاج',  desc:'برجر دجاج مع صوص خاص',    price:15, img:'' },
-    { id:'ml4', name:'برجر',      desc:'برجر لحم طازج',            price:19, img:'' },
-    { id:'ml5', name:'ستيك دجاج', desc:'[ستيك دجاج مشوي [غير متوفر حاليا',      price:22, img:'' },
-    { id:'ml6', name:'برجر لحمة طازة', price:25, desc:'برجر لحم عجل طازج ومميز' },
-    { id:'ml6', name:'برجر لحمة عادي', price:19, desc:'برجر لحم عجل مستورد ومميز' },
+    { id:'ml1', name:'وجبة بروست',     desc:'قطع بروست مقرمشة طازجة',  price:21, img:'WhatsApp Image broasted.jpeg' },
+    { id:'ml2', name:'وجبة مسحب ',      desc:'مسحب دجاج ولذيذ',     price:21, img:'WhatsApp Image crispy meal (2).jpeg' },
+    { id:'ml3', name:'وجبة برجر جاج ',  desc:'برجر دجاج مع صوص خاص',    price:15, img:'WhatsApp Image  burger chichen.jpeg' },
+    { id:'ml5', name:'وجبة ستيك دجاج', desc:'[ستيك دجاج مشوي [غير متوفر حاليا',      price:22, img:'WhatsApp Image chicken steak.jpeg' },
+    { id:'ml6', name:'وجبة برجر لحمة طازة', price:25, desc:'برجر لحم عجل طازج ومميز', img:'WhatsApp Image burger meal.jpeg' },
+    { id:'ml6', name:'وجبة برجر لحمة عادي', price:19, desc:'برجر لحم عجل مستورد ومميز', img:'WhatsApp Image burger meal.jpeg' },\
+    { id:'ml6', name:'وجبة شاورما', price:18, desc:'', img:'WhatsApp Image chawarma meal.jpeg' },
+     { id:'ml6', name:' وجبة شاورما دبل', price:30, desc:'', img:'WhatsApp Image  double chawarma.jpeg' },
   ],
 
   // سندويشات — نقانق له سعران، الباقي سعر ثابت
   sandwiches: [
-    { id:'sw1', name:'كرسبي',      desc:'دجاج كرسبي مقرمش',       price:15, img:'' },
-    { id:'sw2', name:'ستيك دجاج',  desc:'ستيك دجاج طري في خبز',   price:16, img:'' },
-    { id:'sw3', name:'ستيك عجل',   desc:'ستيك عجل طري في خبز',    price:20, img:'' },
-    { id:'sw5', name:'كورن دوق', price:8, desc:'كورن دوق مقرمش ولذيذ' },
-    { id:'sw4', name:'برجر لحمة طازة ',   desc:'لحم بلدي',    price:22, img:'' },
-     { id:'sw6', name:'برجر لحمة',   desc:'لحم مستورد عجل',    price:16, img:'' },
+    { id:'sw1', name:'ساندوش كرسبي ',      desc:'دجاج كرسبي مقرمش',       price:15, img:'WhatsApp Image crispy sandwich.jpeg' },
+    { id:'sw2', name:'ساندوش ستيك دجاج',  desc:'ستيك دجاج طري في خبز',   price:16, img:'' },
+    { id:'sw3', name:'ساندوش ستيك عجل',   desc:'ستيك عجل طري في خبز',    price:20, img:'' },
+    { id:'sw5', name:'كورن دوق', price:8, desc:'كورن دوق مقرمش ولذيذ', img:'' },
+    { id:'sw4', name:'ساندوش برجر لحمة طازة ',   desc:'لحم بلدي',    price:22, img:'WhatsApp Image   burger.jpeg' },
+     { id:'sw6', name:'ساندوش برجر لحمة',   desc:'لحم مستورد عجل',    price:16, img:'WhatsApp Image   burger.jpeg' },
     {
       // نقانق: خياران بدون تسمية كبير/صغير — فقط النوع والسعر
       id:'sw4', name:'نقانق', desc:'نقانق مشوية — اختر النوع', img:'',
@@ -235,22 +245,22 @@ const menuData = {
 
   // عائلي بروست — سعر حسب عدد القطع
   familyBrost: [
-    { id:'fb1', name:'9 قطع',   desc:'وجبة عائلية بروست 9 قطع',   price:80,  img:'' },
-    { id:'fb2', name:'15 قطعة', desc:'وجبة عائلية بروست 15 قطعة', price:130, img:'' },
-    { id:'fb3', name:'21 قطعة', desc:'وجبة عائلية بروست 21 قطعة', price:165, img:'' },
+    { id:'fb1', name:'9 قطع',   desc:'وجبة عائلية بروست 9 قطع',   price:80,  img:'WhatsApp Image  crispy family meal.jpeg' },
+    { id:'fb2', name:'15 قطعة', desc:'وجبة عائلية بروست 15 قطعة', price:130, img:'WhatsApp Image  crispy family meal.jpeg' },
+    { id:'fb3', name:'21 قطعة', desc:'وجبة عائلية بروست 21 قطعة', price:165, img:'WhatsApp Image  crispy family meal.jpeg' },
   ],
 
   // عائلي كرسبي — سعر حسب عدد القطع
   familyCrispy: [
-    { id:'fc1', name:'16 قطعة', desc:'وجبة عائلية كرسبي 16 قطعة', price:85,  img:'' },
-    { id:'fc2', name:'25 قطعة', desc:'وجبة عائلية كرسبي 25 قطعة', price:120, img:'' },
-    { id:'fc3', name:'30 قطعة', desc:'وجبة عائلية كرسبي 30 قطعة', price:145, img:'' },
+    { id:'fc1', name:'16 قطعة', desc:'وجبة عائلية كرسبي 16 قطعة', price:85,  img:'WhatsApp Image  crispy family meal.jpeg' },
+    { id:'fc2', name:'25 قطعة', desc:'وجبة عائلية كرسبي 25 قطعة', price:120, img:'WhatsApp Image  crispy family meal.jpeg' },
+    { id:'fc3', name:'30 قطعة', desc:'وجبة عائلية كرسبي 30 قطعة', price:145, img:'WhatsApp Image  crispy family meal.jpeg' },
   ],
 
   // حلويات — كلها بأسعار متعددة بدون تسمية كبير/صغير
   sweets: [
     {
-      id:'s1', name:'فشافيش', desc:'فشافيش متنوعة — اختر السعر', img:'',
+      id:'s1', name:'فشافيش', desc:'فشافيش متنوعة — اختر السعر', img:'WhatsApp Image fashafish.jpeg',
       prices: [
         { label:'5₪',  price:5  },
         { label:'10₪', price:10 },
@@ -258,7 +268,7 @@ const menuData = {
       ]
     },
     {
-      id:'s2', name:'كريب', desc:'كريب بنكهات مختلفة', img:'',
+      id:'s2', name:'كريب', desc:'كريب بنكهات مختلفة', img:'WhatsApp Image crepe.jpeg',
       prices: [
         { label:'10₪', price:10 },
         { label:'12₪', price:12 },
@@ -280,12 +290,12 @@ const menuData = {
     },
     {
       // قشطوطة: سعر واحد 7 شيكل
-      id:'s5', name:'قشطوطة', desc:'قشطوطة حلوة', img:'',
+      id:'s5', name:'قشطوطة', desc:'قشطوطة حلوة', img:'WhatsApp Image qashtota.jpeg',
       price: 7  // سعر ثابت 7 شيكل كما طُلب
     },
     {
       // تشيز كيك: سعر أساسي 8 وخيار إضافة بستاشيو بـ 10
-      id:'s6', name:'تشيز كيك', desc:'تشيز كيك كريمي — يمكن إضافة بستاشيو', img:'',
+      id:'s6', name:'تشيز كيك', desc:'تشيز كيك كريمي — يمكن إضافة بستاشيو', img:'WhatsApp Image  cheesecake.jpeg',
       prices: [
         { label:'عادي 8₪',         price:8  }, // تشيز كيك بدون إضافات
         { label:'+ بستاشيو 10₪',   price:10 }, // تشيز كيك مع إضافة بستاشيو
@@ -356,6 +366,7 @@ function makeCard(item) {
 
   // إرجاع HTML البطاقة كاملاً
   return `
+ 
     <div class="menu-card">
       <div class="card-img">
         ${item.img
@@ -518,7 +529,7 @@ function updateOrderText() {
   const deliveryLine = isDelivery
     ? `📍 التوصيل: نعم\n🏠 العنوان: ${address || '...'}`
     : `🏃 الاستلام: من المحل مباشرة`;
-
+const notesLine = notes ? `📝 ملاحظات: ${notes}\n` : '';
   // النص الكامل الجاهز للنسخ والإرسال
   box.textContent =
 `━━━━━━━━━━━━━━━━━━━━
